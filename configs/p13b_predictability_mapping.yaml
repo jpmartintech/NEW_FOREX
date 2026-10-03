@@ -1,0 +1,50 @@
+# P13B protocol frozen before inspecting mapping results.
+policy_id: p13b-historical-predictability-v1
+source:
+  classified_census: reports/p13a_artifacts/classified_census.parquet
+  classified_census_sha256: 4281610c8fa4482b6de29da4efcb436e7eed1ea5c264c5ca3d8f24ae5b70569c
+  p13a_manifest: reports/p13a_artifacts/manifest.json
+  p13a_manifest_sha256:  # filled in the run manifest; source file is hash-checked
+  invalid_run: reports/p13_invalid_budget_run_99k
+  invalid_run_excluded: true
+variables:
+  historical_x:
+    - training_profit_factor
+    - training_n_trades
+    - training_expectancy_R
+    - training_return
+    - training_max_drawdown
+    - direction
+    - complexity
+  unavailable_historical: [win_rate, payoff_ratio, historical_frequency, historical_behavior_signature, historical_cost_per_trade, predicate_count]
+  forward_y:
+    - forward_n_trades
+    - forward_gross_expectancy_R
+    - forward_expectancy_R
+    - forward_return
+    - forward_x2_return
+    - forward_max_drawdown
+    - economic_class
+  forward_predictors_forbidden: true
+binning:
+  profit_factor: [1.0, 1.1, 1.2, 1.3, 1.5]
+  training_n_trades: [25, 50, 75, 100, 150, 200, 250]
+  other_numeric: quantile_edges_from_historical_x_only
+  infinite_profit_factor: separate_inf_or_undefined_bin
+activity_conditions: [all, active_ge_1, active_ge_3, active_ge_5]
+interactions:
+  allowed: [training_profit_factor_x_training_n_trades, training_expectancy_R_x_training_n_trades, training_profit_factor_x_training_max_drawdown, direction_x_training_profit_factor]
+  exhaustive_search: false
+portfolio_control:
+  required_ledgers: true
+  unavailable_if_not_present: true
+  no_return_summing: true
+reproducibility:
+  seed: 20261313
+  no_ga_rerun: true
+  no_forward_selection: true
+  holdout_used: false
+  max_forward_end_exclusive: 2018-07-01
+artifacts:
+  output_dir: reports/p13b_artifacts
+  reproducible: true

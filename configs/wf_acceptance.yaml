@@ -1,0 +1,31 @@
+# P06 fixed-finalist walk-forward acceptance. Freeze before opening development_wf.
+policy_id: p06-frozen-wf-v1
+cohort: p03.1-frozen-finalists
+partition: development_wf
+windows: [2015, 2016, 2017, 2018]
+criteria:
+  min_total_oos_trades: 40
+  min_aggregate_expectancy_R: 0.0
+  aggregate_expectancy_strict: true
+  min_aggregate_profit_factor: 1.05
+  aggregate_profit_factor_strict: true
+  require_finite_profit_factor: true
+  min_positive_years: 3
+  total_years: 4
+  positive_year_definition: n_trades > 0 and expectancy_R > 0
+  costs_x2_expectancy_R: 0.0
+  costs_x2_expectancy_strict: true
+  frozen_identity_required: true
+  max_drawdown:
+    source: runs/p02-p04-eurusd-real-100k-clean-final/p04_report.json
+    method: maximum_across_moving_stationary_period_block_dd_p95
+    definition: closed_trade_equity_fraction_of_peak
+    risk_policy: p04-fixed-fractional-r-v1
+    risk_per_trade: 0.005
+    comparable_required: true
+    unavailable_action: block_certification
+provenance:
+  source_data_partition: dev_train_for_selection_development_wf_for_evaluation
+  no_recalibration: true
+  holdout_access: false
+  procedure_validation_access: false

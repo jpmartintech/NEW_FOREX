@@ -1,0 +1,2 @@
+[console_scripts]
+new_forex = new_forex.cli:main

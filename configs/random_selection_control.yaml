@@ -1,0 +1,26 @@
+# P11 Control A. Frozen before any random forward backtest.
+policy_id: p11-random-selection-control-a-v1
+source_policy_id: p10-null-control-v1
+generations: 16
+replicates_per_generation: 100
+selection_size: 5
+universe: eligible_candidates_same_generation_excluding_new_forex_selected
+sampling: uniform_without_replacement
+seed:
+  base: 20261010
+  derivation: base + generation_index * 1000 + replicate_index
+forward:
+  start_and_end: identical_to_source_generation
+  holdout_end_exclusive: 2023-01-01
+execution:
+  timeframe: M15
+  cost_multiplier: [1.0, 2.0]
+  risk_per_trade: 0.005
+  max_aggregate_risk: 0.025
+  overlap_policy: equal_risk_cap_only_no_reweighting
+  engine: frozen_p08_p09_backtester_and_portfolio_ledger
+integrity:
+  no_ga_rerun: true
+  no_forward_information_in_selection: true
+  idempotent_checkpoints: true
+  minimum_eligible_after_exclusion: 1359

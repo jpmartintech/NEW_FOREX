@@ -1,0 +1,29 @@
+# P12D frozen population lifecycle census. No GA execution is permitted.
+policy_id: p12d-population-lifecycle-v1
+source_run: runs/p08-rolling-2019-q1-v3
+archive: runs/p08-rolling-2019-q1-v3/ga_archive.jsonl
+archive_sha256: 0dd44f144ce30751df5956ce94db2d04944e99dce8c106bc5c46177f0e87b6cb
+selection_audit: runs/p08-rolling-2019-q1-v3/selection_audit.jsonl
+p12a_result: reports/p12a_artifacts/full_forward_census.parquet
+quarters:
+  - [2017-01-01, 2017-04-01]
+  - [2017-04-01, 2017-07-01]
+  - [2017-07-01, 2017-10-01]
+  - [2017-10-01, 2018-01-01]
+  - [2018-01-01, 2018-04-01]
+  - [2018-04-01, 2018-07-01]
+  - [2018-07-01, 2018-10-01]
+  - [2018-10-01, 2019-01-01]
+  - [2019-01-01, 2019-04-01]
+evaluation:
+  timeframe: M15
+  cost_multipliers: [1.0, 2.0]
+  chunk_size: 5000
+  no_recalibration: true
+  holdout_end_exclusive: 2023-01-01
+  engine: frozen_p08_backtester
+execution:
+  checkpoint_each_chunk: true
+  ga_rerun: false
+  no_forward_selection: true
+  source_end_exclusive: 2019-04-01

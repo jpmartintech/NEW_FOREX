@@ -1,0 +1,58 @@
+# P12F protocol frozen before inspecting P12F forward results.
+policy_id: p12f-high-quality-v1
+source:
+  archive: runs/p08-rolling-2019-q1-v3/ga_archive.jsonl
+  archive_sha256: 0dd44f144ce30751df5956ce94db2d04944e99dce8c106bc5c46177f0e87b6cb
+  selection_audit: runs/p08-rolling-2019-q1-v3/selection_audit.jsonl
+  selection_audit_sha256: d9c52c45a1eae6251d78bf39d3226a2870d9c75c45559def2cca7a35dd7b14e7
+  p12d_population: reports/p12d_artifacts/population_lifecycle.parquet
+  p12d_population_sha256: 614d38565fbc7ecc3347c33b515c2444e97432d6ec97f4025d96a0733f565e11
+  historical_window: ["2009-01-01", "2017-01-01"]
+  forward_window: ["2017-01-01", "2017-04-01"]
+  quarter: 2017Q1
+rule:
+  training_profit_factor: {operator: ">", value: 1.30}
+  training_n_trades: {operator: ">", value: 250}
+  historical_only: true
+groups:
+  full_population: "all 100000 archived strategies"
+  prior_filter: "training_profit_factor >= 1.05 and training_n_trades >= 100"
+  high_quality: "training_profit_factor > 1.30 and training_n_trades > 250"
+evaluation:
+  timeframe: M15
+  cost_multipliers: [1.0, 2.0]
+  source_results: p12d_population_lifecycle
+  derive_gross_R: "2 * baseline_net_R - costs_x2_net_R; only after identical trade counts are verified"
+  transaction_cost_accounting: aggregate_transaction_cost_only
+  no_forward_selection: true
+  no_later_quarters: true
+  no_ga_rerun: true
+  holdout_used: false
+portfolio:
+  size: 5
+  replicates: 1000
+  sampling: uniform_without_replacement
+  groups: [full_population, prior_filter, high_quality]
+  seed_base: 20261216
+  seed_derivation: seed_base + group_index * 100000 + replicate
+  risk_per_trade: 0.005
+  max_aggregate_risk: 0.025
+  engine: frozen_p08_p09_portfolio_ledger
+controls:
+  full_population:
+    replicates: 1000
+    seed_base: 20261226
+    sampling: uniform_without_replacement
+  activity_matched:
+    replicates: 1000
+    seed_base: 20261236
+    matching_variable: training_n_trades
+    matching_method: empirical_quantile_bins_20_with_uniform_bin_sampling
+    matching_bins: 20
+    sampling: uniform_without_replacement
+  matching_bins: 20
+artifacts:
+  output_dir: reports/p12f_artifacts
+  checkpoint: reports/p12f_artifacts/checkpoint.json
+  reproducible: true
+holdout_end_exclusive: 2023-01-01

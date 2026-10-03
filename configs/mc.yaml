@@ -1,0 +1,6 @@
+iterations: 5000
+seed: 20261002
+block_length: 20
+methods: [moving, stationary]
+ruin_floor: 0.5
+quantiles: [0.5, 0.95, 0.99]

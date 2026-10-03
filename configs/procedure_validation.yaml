@@ -1,0 +1,34 @@
+# P07 independent validation policy. Freeze before opening procedure_validation.
+policy_id: p07-procedure-validation-v1
+inherits_metric_definitions_from: p06-frozen-wf-v1
+cohort: p06-single-frozen-survivor
+strategy_hash: 237d10ee505b9bf528a2036d30babb26db137e9de3852a8bb116f73799798ebd
+partition: procedure_validation
+period: [2019-01-01, 2023-01-01]
+criteria:
+  min_total_oos_trades: 40
+  min_aggregate_expectancy_R: 0.0
+  aggregate_expectancy_strict: true
+  min_aggregate_profit_factor: 1.05
+  aggregate_profit_factor_strict: true
+  require_finite_profit_factor: true
+  min_positive_years: 3
+  total_years: 4
+  positive_year_definition: n_trades > 0 and expectancy_R > 0
+  costs_x2_expectancy_R: 0.0
+  costs_x2_expectancy_strict: true
+  frozen_identity_required: true
+  max_drawdown:
+    source: runs/p02-p04-eurusd-real-100k-clean-final/p04_report.json
+    method: maximum_across_moving_stationary_period_block_dd_p95
+    definition: closed_trade_equity_fraction_of_peak
+    risk_policy: p04-fixed-fractional-r-v1
+    risk_per_trade: 0.005
+    comparable_required: true
+    unavailable_action: block_certification
+provenance:
+  source_selection: P03.1/P06 frozen survivor only
+  no_recalibration: true
+  no_ga: true
+  holdout_access: false
+  development_wf_used_for_acceptance: false

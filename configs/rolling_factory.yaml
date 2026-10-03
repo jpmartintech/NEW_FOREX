@@ -1,0 +1,34 @@
+# P08 Rolling Factory V1. Freeze before any 2019 forward evaluation.
+policy_id: p08-rolling-factory-v1
+frequency: quarterly
+birth_date: 2019-01-01
+training_months: 96
+development_months: 24
+forward_months: 3
+ga:
+  max_unique_evaluations: 100000
+  base_seed: 20261003
+  archive_key: canonical_hash
+selection:
+  min_dev_wf_trades: 20
+  min_aggregate_expectancy_R: 0.0
+  aggregate_expectancy_strict: true
+  min_profit_factor: 1.05
+  require_finite_profit_factor: true
+  min_positive_years: 1
+  total_years: 2
+  positive_year_definition: n_trades > 0 and expectancy_R > 0
+  costs_x2_expectancy_R: 0.0
+  costs_x2_expectancy_strict: true
+  max_active_strategies: 5
+  tie_break: [expectancy_R_desc, profit_factor_desc, max_drawdown_asc, n_trades_desc, strategy_hash_asc]
+portfolio:
+  risk_per_trade: 0.005
+  max_aggregate_risk: 0.025
+  zero_survivors_action: no_active_strategies_and_record_empty_forward
+  overlap_policy: equal_risk_cap_only_no_reweighting
+execution:
+  timeframe: M15
+  no_recalibration_after_birth: true
+  costs_x2_required: true
+  holdout_access: false

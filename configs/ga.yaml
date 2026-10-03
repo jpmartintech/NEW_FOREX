@@ -1,0 +1,12 @@
+seed: 20261002
+population: 1000
+generations: 100
+max_unique_evaluations: 100000
+elite: 20
+tournament: 4
+crossover_rate: 0.7
+mutation_rate: 0.4
+immigrant_rate: 0.1
+max_predicates: 4
+archive_key: canonical_hash
+fitness_data: dev_train_only

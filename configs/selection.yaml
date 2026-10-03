@@ -1,0 +1,7 @@
+top_k: 50
+min_trades: 100
+min_mean_r: 0.0
+min_profit_factor: 1.0
+max_pair_fraction: 0.5
+ranking: [mean_r, profit_factor, max_dd_ascending, n_trades_descending, canonical_hash]
+costs_required: true

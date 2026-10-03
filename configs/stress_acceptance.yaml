@@ -1,0 +1,40 @@
+# Established after the first P05 execution; exploratory for that cohort.
+version: p05-acceptance-v1
+established_after_first_p05_run: true
+cohort_certification: prohibited
+metric_definitions:
+  expectancy_net_R: arithmetic_mean_of_result_R
+  profit_factor: gross_positive_result_R_divided_by_absolute_negative_result_R
+  finite_profit_factor_required: true
+  minimum_trades_for_formal_classification: 100
+scenarios:
+  baseline_x1:
+    mode: formal
+    criterion: expectancy_net_R > 0
+  cost_x1_5:
+    mode: diagnostic_only
+    criterion: none
+  cost_x2:
+    mode: formal
+    criterion: expectancy_net_R > 0
+  variable_slippage:
+    mode: formal
+    criterion: expectancy_net_R > 0
+  delay_m15_1:
+    mode: formal
+    criterion: finite_profit_factor > 1
+  delay_m15_2:
+    mode: diagnostic_only
+    criterion: none
+  price_perturbation:
+    mode: diagnostic_only
+    criterion: none
+  combined_adverse:
+    mode: diagnostic_only
+    criterion: none
+independent_evaluation:
+  allowed_partitions: [development_wf, procedure_validation]
+  selection_is_allowed: false
+  holdout_is_allowed: false
+  required_period_semantics: half_open_local_timestamps
+  runner: scripts/run_p05_stress.py

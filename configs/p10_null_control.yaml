@@ -1,0 +1,29 @@
+# P10 null controls. Frozen before any null-world result is generated.
+policy_id: p10-null-control-v1
+historical_policy_sha256: 73f7bb0649c814a0ec076fff9d9e3413ba480fb31eca765ed18b860f6e1c72ed
+scope:
+  generations: 16
+  start: 2019-01-01
+  end_exclusive: 2023-01-01
+  holdout_excluded: true
+  market_data_end_exclusive: 2023-01-01
+controls:
+  A_random_selection_same_universe:
+    definition: Randomly select five eligible candidates per generation from the preserved P08/P09 selection-audit universe; evaluate them on the corresponding forward quarter with the frozen execution and cost model.
+    replicates: 100
+    seed_base: 20261010
+    selection: uniform_without_replacement
+    preserve_budget: 100000
+    preserve_windows: true
+    preserve_costs: true
+  B_complete_null_world:
+    definition: Re-run the complete generation and selection procedure under a documented null signal process, preserving windows, constraints, unique-evaluation budget, seeds, costs, and risk controls.
+    status: proposed_not_executed
+    seed_base: 20261011
+    preserve_budget: 100000
+    preserve_windows: true
+    preserve_costs: true
+    reason: Requires 15 additional full 100000-evaluation generation runs and a separately specified null signal generator; estimate before execution.
+outputs:
+  random_control_a: reports/p10_artifacts/null_control_a.csv
+  complete_control_b_estimate: reports/p10_artifacts/null_control_b_estimate.json

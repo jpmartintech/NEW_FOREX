@@ -1,0 +1,7 @@
+# All boundaries are local timestamps and use [start, end) semantics.
+timezone: Europe/Athens
+partitions:
+  dev_train: ["2003-01-01 00:00:00", "2015-01-01 00:00:00"]
+  development_wf: ["2015-01-01 00:00:00", "2019-01-01 00:00:00"]
+  procedure_validation: ["2019-01-01 00:00:00", "2023-01-01 00:00:00"]
+  final_holdout: ["2023-01-01 00:00:00", null]

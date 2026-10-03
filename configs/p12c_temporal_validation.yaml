@@ -1,0 +1,44 @@
+# P12C frozen before evaluating later-generation forward results.
+policy_id: p12c-temporal-hypothesis-validation-v1
+source_hypotheses: reports/p12b_reverse_forward_analysis.md
+generations: [2019Q2, 2019Q3, 2019Q4, 2020Q1, 2020Q2, 2020Q3, 2020Q4, 2021Q1, 2021Q2, 2021Q3, 2021Q4, 2022Q1, 2022Q2, 2022Q3, 2022Q4]
+forward_end_exclusive: 2023-01-01
+ga_rerun: false
+evaluation:
+  timeframe: M15
+  cost_multipliers: [1.0, 2.0]
+  chunk_size: 5000
+  risk_per_trade: 0.005
+  max_aggregate_risk: 0.025
+  portfolio_engine: frozen_p08_p09_portfolio_ledger
+  checkpoint_each_generation: true
+hypotheses:
+  H1_activity_moderate:
+    historical_variable: development_n_trades
+    populations: [0, 1-5, 6-20, 21-50, 51-100, '>100']
+    rule: Use development WF trade-count buckets exactly; no forward activity is used for classification.
+  H2_development_positive_insufficient:
+    historical_variable: development_expectancy_R
+    populations: [development_expectancy_R <= 0, development_expectancy_R > 0]
+  H3_cost_robustness:
+    historical_variable: development_x2_expectancy_R
+    populations: [development_x2_expectancy_R <= 0, development_x2_expectancy_R > 0]
+  H4_direction_complexity:
+    historical_variable: direction_and_n_predicates
+    populations: [LONG_1_4_predicates, SHORT_1_4_predicates, SHORT_1_2_predicates]
+  H5_rejected_population:
+    historical_variable: original_filter_decision
+    populations: [PASS, FAIL]
+control:
+  replicates_per_generation: 100
+  selection_size: 5
+  universe: complete_100000_archive
+  sampling: uniform_without_replacement
+  seed_base: 20261212
+  seed_derivation: seed_base + generation_index * 1000 + replicate_index
+  exclusion: none
+integrity:
+  no_forward_predictors: true
+  no_holdout: true
+  no_retroactive_thresholds: true
+  no_zero_trade_success_claim: true

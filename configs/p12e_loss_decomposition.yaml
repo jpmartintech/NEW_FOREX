@@ -1,0 +1,35 @@
+policy_id: p12e-loss-decomposition-v1
+source_phase: p12d.3
+source_artifacts:
+  manifest_sha256: aba2be1b3d5142f85ee81c46e250a7c9f3890fa683a4b0bacc281e40543398be
+  compositions_sha256: 7027eeb1f1ff34959cb2048aed1b8e64105aae91431b39d9c0ea06b29a14e315
+  portfolio_results_sha256: 93d2ddd70b753e6afea16aae49078a24cd00817ea574f0efaa84e2cb1f81270b
+  rolling_trajectories_sha256: c59624c744c71727a315446c64b5631200853b23cd1a0e311f22d5bb3f3aa812
+  source_report_sha256: cf2c2e60ea38fcb0363653f96c9c63e9775170e3fe5bdedf6c453524e7afe3bb
+frozen_rule:
+  training_profit_factor_gte: 1.05
+  training_n_trades_gte: 100
+evaluation:
+  generations: [2019Q2, 2019Q3, 2019Q4, 2020Q1, 2020Q2, 2020Q3, 2020Q4, 2021Q1, 2021Q2, 2021Q3, 2021Q4, 2022Q1, 2022Q2, 2022Q3, 2022Q4]
+  groups: [eligible, full_random, activity_matched]
+  costs: [baseline, costs_x2]
+  risk_per_trade: 0.005
+  max_aggregate_risk: 0.025
+  portfolio_size: 5
+  no_resampling: true
+  no_forward_selection: true
+  holdout_end_exclusive: 2023-01-01
+accounting:
+  gross_price_pnl: signed_exit_minus_entry_plus_funding
+  net_price_pnl: gross_price_pnl_minus_transaction_cost
+  ledger_transaction_cost: aggregate_round_trip_cost_only
+  separate_commission_spread_slippage: false
+  gross_portfolio_equity: capitalized_event_sweep_using_gross_R
+  net_portfolio_equity: capitalized_event_sweep_using_result_R
+  cost_drag_identity_tolerance: 1.0e-10
+  engine: p12d_3_event_sweep_contract
+diagnostics:
+  leave_one_period_out: true
+  blocked_signal_counterfactual: unavailable_without_signal_log
+  behavioral_signatures: aggregate_forward_only
+  holdout_used: false

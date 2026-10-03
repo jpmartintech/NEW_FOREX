@@ -1,0 +1,66 @@
+# P13 protocol frozen before any July 2017 forward result is inspected.
+policy_id: p13-six-month-rolling-v1.1
+pair: EURUSD
+timeframe: H1
+windows:
+  start_forward: 2017-07-01
+  end_forward_exclusive: 2018-07-01
+  training_months: 6
+  forward_months: 1
+  semantics: left_closed_right_open_local_timestamps
+generation:
+  unique_evaluations: 100000
+  population: 1000
+  # run_genetic retains 20 elites per generation; 102 generations fill 100000 unique evaluations.
+  generations: 102
+  max_predicates: 4
+  ga:
+    elite: 20
+    tournament: 4
+    crossover_rate: 0.7
+    mutation_rate: 0.4
+    immigrant_rate: 0.1
+  random_search:
+    generator: uniform_random_strategy
+  ga_seed_base: 20261301
+  random_seed_base: 20261401
+  seed_derivation: base_seed_plus_generation_index
+selection:
+  training_profit_factor: {operator: ">", value: 1.30}
+  training_n_trades: {operator: ">", value: 250}
+  historical_only: true
+  insufficient_policy:
+    five_or_more: uniform_without_replacement_size_5
+    one_to_four: use_all_and_leave_capital_unallocated
+    zero: cash_no_active_strategies
+  portfolio_seed_base: 20261501
+  no_forward_selection: true
+  no_threshold_changes: true
+portfolio:
+  size: 5
+  risk_per_trade: 0.005
+  max_aggregate_risk: 0.025
+  costs: [1.0, 2.0]
+  rollover: force_close_at_month_end_before_replacement
+  engine: frozen_p08_p09_portfolio_ledger
+  no_reweighting: true
+comparison:
+  groups: [ga_full, ga_eligible, random_full, random_eligible]
+  random_composition_same_policy: true
+  no_forward_ranking: true
+execution:
+  training_timeframe: H1
+  forward_timeframe: H1
+  warmup: causal_prior_bars_only
+  holdout_used: false
+  max_source_end_exclusive: 2018-07-01
+data:
+  canonical_cache_sha256: 29e4b0148de66dae4a23dabb9464365ce68bfcf0901de9cf4037b33ad731adf4
+  splits_sha256: e1f8bef238126ad130d0bca19768087fc9aa7ead392e55484515b18549c19ba4
+  grammar: g1
+artifacts:
+  output_dir: reports/p13_artifacts
+  checkpoint: reports/p13_artifacts/checkpoint.json
+  archive_format: jsonl
+  census_format: parquet
+  reproducible: true

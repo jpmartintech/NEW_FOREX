@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: new-forex
+Version: 0.1.0
+Summary: Reproducible FOREX strategy factory with causal evaluation and sealed validation gates
+Requires-Python: >=3.12
+Requires-Dist: numpy>=2
+Requires-Dist: pandas>=2.2
+Requires-Dist: pyarrow>=15
+Requires-Dist: numba>=0.60
+Requires-Dist: PyYAML>=6
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: ruff>=0.5; extra == "dev"

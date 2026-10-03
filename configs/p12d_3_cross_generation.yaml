@@ -1,0 +1,32 @@
+# P12D.3 frozen replication protocol. No GA execution is permitted.
+policy_id: p12d-3-cross-generation-rule-replication-v1
+rule:
+  training_profit_factor_gte: 1.05
+  training_n_trades_gte: 100
+generations: [2019Q2, 2019Q3, 2019Q4, 2020Q1, 2020Q2, 2020Q3, 2020Q4, 2021Q1, 2021Q2, 2021Q3, 2021Q4, 2022Q1, 2022Q2, 2022Q3, 2022Q4]
+source_p12c: reports/p12c_artifacts
+source_p09: runs/p09-rolling-historical-v1
+evaluation:
+  timeframe: M15
+  cost_multipliers: [1.0, 2.0]
+  portfolio_size: 5
+  portfolios_per_generation: 1000
+  seed_base_eligible: 20261215
+  seed_base_full_control: 30261215
+  seed_base_activity_control: 40261215
+  sampling: uniform_without_replacement
+  risk_per_trade: 0.005
+  max_aggregate_risk: 0.025
+  no_forward_selection: true
+  no_reselection: true
+  engine: frozen_p08_p09_portfolio_ledger
+  worker_threads: 4
+controls:
+  full_random: true
+  activity_matched_training_n_gte: 100
+  activity_matched_random: true
+trajectories:
+  count: 1000
+  pairing: replicate_index_across_chronological_generations
+holdout_end_exclusive: 2023-01-01
+holdout_used: false

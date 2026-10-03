@@ -1,0 +1,32 @@
+# P05 scenario contract. This file must be committed before any stress run.
+version: p05-stress-v1
+pair: EURUSD
+partition: dev_train
+period: [2003-01-01, 2015-01-01]
+baseline:
+  cost_multiplier: 1.0
+  m15_delay_bars: 0
+  variable_slippage: false
+  price_perturbation: false
+cost_multipliers: [1.0, 1.5, 2.0]
+variable_slippage:
+  extra_side_pips_min: 0.25
+  extra_side_pips_max: 1.0
+  range_cap_pips: 20.0
+  causal_reference: completed_signal_h1_range
+price_perturbation:
+  amplitude: 0.0002
+  period_m15_bars: 96
+  shape: deterministic_sine
+  signals_and_features_unchanged: true
+delays_m15_bars: [1, 2]
+combined:
+  cost_multiplier: 2.0
+  variable_slippage: true
+  m15_delay_bars: 2
+  price_perturbation: false
+# No P05 performance thresholds existed before this run. Results therefore
+# expose technical validity plus performance metrics without inventing a gate.
+acceptance_policy:
+  status: not_preestablished
+  reason: no_committed_p05_performance_thresholds_exist

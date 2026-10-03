@@ -1,0 +1,19 @@
+# P12A full archive forward census. No GA execution is permitted by this config.
+policy_id: p12a-full-ga-forward-census-v1
+source_run: p08-rolling-2019-q1-v3
+archive: runs/p08-rolling-2019-q1-v3/ga_archive.jsonl
+archive_sha256: 0dd44f144ce30751df5956ce94db2d04944e99dce8c106bc5c46177f0e87b6cb
+selection_audit: runs/p08-rolling-2019-q1-v3/selection_audit.jsonl
+evaluation:
+  training: [2009-01-01, 2017-01-01]
+  development_wf: [2017-01-01, 2019-01-01]
+  forward: [2019-01-01, 2019-04-01]
+  timeframe: M15
+  cost_multipliers: [1.0, 2.0]
+  no_recalibration: true
+  holdout_end_exclusive: 2023-01-01
+execution:
+  chunk_size: 2000
+  checkpoint_each_chunk: true
+  engine: frozen_p08_backtester
+  ga_rerun: false

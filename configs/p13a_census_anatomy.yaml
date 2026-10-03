@@ -1,0 +1,34 @@
+# P13A protocol frozen before calculating the economic census outputs.
+policy_id: p13a-census-anatomy-v1
+source:
+  p13_manifest: reports/p13_artifacts/manifest.json
+  p13_manifest_sha256: cd445e9f2ccbfdaa10246ef8c4153708fabcd1cbfdcd448b6ecfd405c795f8c2
+  p13_census: reports/p13_artifacts/forward_census_all.parquet
+  p13_census_sha256: a5f371d49db1dc7354182ea1d401aa8533936201c763d435b7930905794c8ec5
+  invalid_run: reports/p13_invalid_budget_run_99k
+  invalid_run_excluded: true
+classification:
+  equality_policy: exact_zero_is_non_positive
+  categories:
+    A: inactive_forward_n_trades_eq_0
+    B: active_and_gross_total_R_le_0
+    C: active_and_gross_total_R_gt_0_and_baseline_total_R_le_0
+    D: active_and_baseline_total_R_gt_0_and_x2_total_R_le_0
+    E: active_and_x2_total_R_gt_0
+evaluation:
+  generations: 12
+  strategies_per_generator_generation: 100000
+  generators: [ga, random]
+  distributions: [0.01, 0.05, 0.25, 0.50, 0.75, 0.95, 0.99]
+  gross_total_R_definition: 2*forward_total_R-forward_x2_total_R
+  transaction_cost_breakdown: aggregate_only
+  max_forward_end_exclusive: 2018-07-01
+  no_forward_selection: true
+  no_ga_rerun: true
+  holdout_used: false
+historical_group_e:
+  descriptive_only: true
+  forbidden_predictors: [strategy_hash, forward_behavior_signature]
+artifacts:
+  output_dir: reports/p13a_artifacts
+  reproducible: true
